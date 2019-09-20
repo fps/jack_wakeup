@@ -3,20 +3,20 @@
 #include <vector>
 #include <algorithm>
 #include <cstdlib>
-#include <gpiod.h>
 #include <unistd.h>
 #include <boost/program_options.hpp>
 #include <jack/jack.h>
 #include <signal.h>
 #include <cstdint>
 #include <time.h>
+#include <cmath>
 
 namespace po = boost::program_options;
 
 jack_client_t *jack_client;
 jack_port_t* jack_port;
 
-uint64_t number_of_samples;
+size_t number_of_samples;
 std::vector<timespec> samples;
 
 bool quit = false;
@@ -53,12 +53,17 @@ int main(int ac, char *av[])
     std::string jack_client_name;
     std::string jack_server_name;
 
+    bool report_samples = false;
+    bool report_statistics = false;
+
     po::options_description desc("Allowed options");
     desc.add_options()
         ("help,h", "produce help message")
         ("jack-client-name,a", po::value<std::string>(&jack_client_name)->default_value("jack_wakeup"), "The jack client name to use")
         ("jack-server-name,e", po::value<std::string>(&jack_server_name)->default_value("default"), "The jack server name to use")
-        ("number-of-samples,n", po::value<uint64_t>(&number_of_samples)->default_value(512), "The number of samples to gather")
+        ("number-of-samples,n", po::value<size_t>(&number_of_samples)->default_value(512), "The number of samples to gather")
+        ("report-samples,s", po::value<bool>(&report_samples)->default_value(true), "Whether to report the raw sample data")
+        ("report-statistics,t", po::value<bool>(&report_statistics)->default_value(false), "Whether to report statistics about differences between samples")
     ;
 
     po::variables_map vm;
@@ -69,7 +74,7 @@ int main(int ac, char *av[])
         std::cout << desc << "\n";
         return 1;
     }
-    std::cerr << "Starting up..." << std::endl;
+    // std::cerr << "Starting up..." << std::endl;
 
     count = 0;
     samples.resize(number_of_samples);
@@ -107,12 +112,38 @@ int main(int ac, char *av[])
 
     jack_deactivate(jack_client);
 
-    for (uint64_t index = 0; index < number_of_samples; ++index)
+    if (true == report_samples)
     {
-        std::cout << samples[index].tv_sec << " " << samples[index].tv_nsec << "\n";
+        for (size_t index = 0; index < number_of_samples; ++index)
+        {
+            std::cout << samples[index].tv_sec << " " << samples[index].tv_nsec << "\n";
+        }
     }
 
-    std::cerr << "Bye." << std::endl;
+    if (true == report_statistics)
+    {
+        std::vector<float> diffs;
+        diffs.resize(samples.size() - 1);
+        for (size_t index = 0; index < diffs.size(); ++index)
+        {
+            diffs[index] = remainder((samples[index + 1].tv_nsec - samples[index].tv_nsec), 1000000000.0);
+        }
+
+        float mean_diff = 0;
+        float min_diff = diffs[0];
+        float max_diff = 0;
+
+        for (size_t index = 0; index < diffs.size(); ++index)
+        {
+            mean_diff += diffs[index] / (float)(samples.size());
+            if (diffs[index] < min_diff) min_diff = diffs[index];
+            if (diffs[index] > max_diff) max_diff = diffs[index];
+        }
+
+        std::cout << "mean: " << mean_diff << " min: " << min_diff << " max: " << max_diff << "\n";
+    }
+
+    // std::cerr << "Bye." << std::endl;
 
     return 0;
 }

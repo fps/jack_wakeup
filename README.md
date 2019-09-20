@@ -17,6 +17,9 @@ Allowed options:
   -e [ --jack-server-name ] arg (=default)
                                         The jack server name to use
   -n [ --number-of-samples ] arg (=512) The number of samples to gather
+  -s [ --report-samples ] arg (=1)      Whether to report the raw sample data
+  -t [ --report-statistics ] arg (=0)   Whether to report statistics about 
+                                        differences between samples
 </pre>
 
 # Example usage:
@@ -35,4 +38,5 @@ ans =  1076
 octave:7> sqrt(var(diff1))
 ans =  62.629
 </pre>
+
 
