@@ -56,7 +56,7 @@ int main(int ac, char *av[])
     po::options_description desc("Allowed options");
     desc.add_options()
         ("help,h", "produce help message")
-        ("jack-client-name,a", po::value<std::string>(&jack_client_name)->default_value("jack_led_peak"), "The jack client name to use")
+        ("jack-client-name,a", po::value<std::string>(&jack_client_name)->default_value("jack_wakeup"), "The jack client name to use")
         ("jack-server-name,e", po::value<std::string>(&jack_server_name)->default_value("default"), "The jack server name to use")
         ("number-of-samples,n", po::value<uint64_t>(&number_of_samples)->default_value(512), "The number of samples to gather")
     ;

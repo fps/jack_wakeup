@@ -6,7 +6,7 @@ It gathers gettimeofday() values and prints them to stdout at the end of the run
 <pre>
 Allowed options:
   -h [ --help ]                         produce help message
-  -a [ --jack-client-name ] arg (=jack_led_peak)
+  -a [ --jack-client-name ] arg (=jack_wakeup)
                                         The jack client name to use
   -e [ --jack-server-name ] arg (=default)
                                         The jack server name to use
