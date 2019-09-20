@@ -26,5 +26,7 @@ octave:4> max(diff1)
 ans =  1699                                                                                
 octave:5> min(diff1)                                                                                                                                                                  
 ans =  1076                                                                                
+octave:7> sqrt(var(diff1))
+ans =  62.629
 </pre>
 
