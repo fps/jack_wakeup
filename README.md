@@ -1,5 +1,8 @@
 # jack_wakeup
-A small utility to sample wakeup times for a jackd client
+A small utility to sample wakeup times for a jackd client. Its usefullness is 
+mostly limited to being run as the only client in a jack session since only 
+in this case it's guaranteed to be run as soon as possible after a
+period has started.
 
 It gathers gettimeofday() values and prints them to stdout at the end of the run.
 
