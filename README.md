@@ -4,7 +4,10 @@ mostly limited to being run as the only client in a jack session since only
 in this case it's guaranteed to be run as soon as possible after a
 period has started.
 
-It gathers gettimeofday() values and prints them to stdout at the end of the run.
+It gathers <code>clock_gettime(CLOCK_MONOTONIC_RAW)</code> values and prints 
+them to stdout at the end of the run. The format is simply two colums,
+the first being the <code>tv_secs</code> and the second the <code>tv_nsesc</code> 
+values
 
 <pre>
 Allowed options:
@@ -22,7 +25,7 @@ Allowed options:
 $ ./jack_wakeup -n 100000 > log_without_stress.txt
 $ octave
 octave:1> data1 = dlmread("log_with_stress.txt");               
-octave:2> diff1 = mod(diff(data1(:,2)), 1000000);               
+octave:2> diff1 = mod(diff(data1(:,2)), 10^9) / 10^6;               
 octave:3> mean(diff1)                        
 ans =  1333.5                                                                              
 octave:4> max(diff1)                         

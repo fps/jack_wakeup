@@ -9,7 +9,7 @@
 #include <jack/jack.h>
 #include <signal.h>
 #include <cstdint>
-#include <sys/time.h>
+#include <time.h>
 
 namespace po = boost::program_options;
 
@@ -17,7 +17,7 @@ jack_client_t *jack_client;
 jack_port_t* jack_port;
 
 uint64_t number_of_samples;
-std::vector<timeval> samples;
+std::vector<timespec> samples;
 
 bool quit = false;
 
@@ -36,7 +36,7 @@ process (jack_nframes_t nframes, void *arg)
 {
     if (count < number_of_samples)
     {
-        gettimeofday(&samples[count], 0);
+        clock_gettime(CLOCK_MONOTONIC_RAW, &samples[count]);
     }
     else
     {
@@ -109,7 +109,7 @@ int main(int ac, char *av[])
 
     for (uint64_t index = 0; index < number_of_samples; ++index)
     {
-        std::cout << samples[index].tv_sec << " " << samples[index].tv_usec << "\n";
+        std::cout << samples[index].tv_sec << " " << samples[index].tv_nsec << "\n";
     }
 
     std::cerr << "Bye." << std::endl;
