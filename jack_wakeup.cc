@@ -129,7 +129,7 @@ int main(int ac, char *av[])
             diffs[index] = remainder((samples[index + 1].tv_nsec - samples[index].tv_nsec), 1000000000.0);
         }
 
-        float mean_diff = 0;
+        double mean_diff = 0;
         float min_diff = diffs[0];
         float max_diff = 0;
 
