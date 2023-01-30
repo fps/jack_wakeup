@@ -10,6 +10,8 @@
 #include <cstdint>
 #include <time.h>
 #include <cmath>
+#include <iomanip>
+#include <stdio.h>
 
 namespace po = boost::program_options;
 
@@ -140,7 +142,7 @@ int main(int ac, char *av[])
             if (diffs[index] > max_diff) max_diff = diffs[index];
         }
 
-        std::cout << "mean: " << mean_diff << " min: " << min_diff << " max: " << max_diff << "\n";
+        std::cout << "min: " << (min_diff/1e6) << " ms; mean: " << (mean_diff/1e6) << "ms;  max: " << (max_diff/1e6) << " ms\n";
     }
 
     // std::cerr << "Bye." << std::endl;
