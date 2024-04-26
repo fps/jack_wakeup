@@ -65,7 +65,7 @@ int main(int ac, char *av[])
         ("jack-client-name,a", po::value<std::string>(&jack_client_name)->default_value("jack_wakeup"), "The jack client name to use")
         ("jack-server-name,e", po::value<std::string>(&jack_server_name)->default_value("default"), "The jack server name to use")
         ("number-of-samples,n", po::value<size_t>(&number_of_samples)->default_value(512), "The number of samples to gather")
-        ("report-differences,d", po::value<bool>(&report_differences)->default_value(false), "Whether to report the differences between raw sample data")
+        ("report-differences,d", po::value<bool>(&report_differences)->default_value(false), "Whether to report the differences (ms) between raw sample data")
         ("report-samples,s", po::value<bool>(&report_samples)->default_value(false), "Whether to report the raw sample data")
         ("report-statistics,t", po::value<bool>(&report_statistics)->default_value(true), "Whether to report statistics about differences between samples")
     ;
