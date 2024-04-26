@@ -57,6 +57,7 @@ int main(int ac, char *av[])
 
     bool report_samples = false;
     bool report_statistics = false;
+    bool report_differences = false;
 
     po::options_description desc("Allowed options");
     desc.add_options()
@@ -64,6 +65,7 @@ int main(int ac, char *av[])
         ("jack-client-name,a", po::value<std::string>(&jack_client_name)->default_value("jack_wakeup"), "The jack client name to use")
         ("jack-server-name,e", po::value<std::string>(&jack_server_name)->default_value("default"), "The jack server name to use")
         ("number-of-samples,n", po::value<size_t>(&number_of_samples)->default_value(512), "The number of samples to gather")
+        ("report-differences,d", po::value<bool>(&report_differences)->default_value(false), "Whether to report the differences between raw sample data")
         ("report-samples,s", po::value<bool>(&report_samples)->default_value(false), "Whether to report the raw sample data")
         ("report-statistics,t", po::value<bool>(&report_statistics)->default_value(true), "Whether to report statistics about differences between samples")
     ;
@@ -119,6 +121,15 @@ int main(int ac, char *av[])
         for (size_t index = 0; index < number_of_samples; ++index)
         {
             std::cout << samples[index].tv_sec << " " << samples[index].tv_nsec << "\n";
+        }
+    }
+
+    if (true == report_differences) 
+    {
+        for (size_t index = 1; index < number_of_samples; ++index)
+        {
+            double diff = (((double)samples[index].tv_nsec + 1000000000.0 * (double)samples[index].tv_sec) - ((double)samples[index-1].tv_nsec + 1000000000.0 * (double)samples[index-1].tv_sec)) / 1000000.0f;
+            std::cout << diff << "\n";
         }
     }
 
