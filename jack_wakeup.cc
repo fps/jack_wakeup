@@ -38,7 +38,7 @@ process (jack_nframes_t nframes, void *arg)
 {
     if (count < number_of_samples)
     {
-        clock_gettime(CLOCK_MONOTONIC_RAW, &samples[count]);
+        clock_gettime(CLOCK_MONOTONIC, &samples[count]);
     }
     else
     {
@@ -128,7 +128,7 @@ int main(int ac, char *av[])
     {
         for (size_t index = 1; index < number_of_samples; ++index)
         {
-            double diff = (((double)samples[index].tv_nsec + 1000000000.0 * (double)samples[index].tv_sec) - ((double)samples[index-1].tv_nsec + 1000000000.0 * (double)samples[index-1].tv_sec)) / 1000000.0f;
+            double diff = (((double)samples[index].tv_nsec / 1e6  + 1e3 * (double)samples[index].tv_sec) - ((double)samples[index-1].tv_nsec / 1e6 + 1e3 * (double)samples[index-1].tv_sec));
             std::cout << diff << "\n";
         }
     }
@@ -148,7 +148,7 @@ int main(int ac, char *av[])
 
         for (size_t index = 0; index < diffs.size(); ++index)
         {
-            mean_diff += diffs[index] / (float)(samples.size());
+            mean_diff += diffs[index] / (float)(diffs.size());
             if (diffs[index] < min_diff) min_diff = diffs[index];
             if (diffs[index] > max_diff) max_diff = diffs[index];
         }
